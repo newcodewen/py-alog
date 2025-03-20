@@ -52,8 +52,56 @@ class Tree:
         p = self.root()
       return self._height2(p)
 
+    def __iter__(self):
+      for p in self.positions():
+        yield p.element()
+        
+    def preorder(self):
+      if not self.is_empty():
+        for p in self._subtree_preorder(self.root()):
+          yield p
 
+    def _subtree_preorder(self, p):
+      yield p  # 先访问p本身
+      # 然后递归访问p的每个子树
+      for c in self.children(p):
+        for other in self._subtree_preorder(c):
+          yield other
+
+    def positions(self):
+      return self.preorder()
+    
+    def postorder(self):
+      if not self.is_empty():
+        for p in self._subtree_postorder(self.root()):
+          yield p
+    def _subtree_postorder(self, p):
+      for c in self.children(p):
+        for other in self._subtree_postorder(c):
+          yield other
+      yield p
+    def breadthfirst(self):
+      if not self.is_empty():
+        fringe = []
+        fringe.append(self.root())
+        while not fringe.is_empty():
+          p = fringe.pop()
+          yield p
+          for c in self.children(p):
+            fringe.append(c)
           
           
+    def inorder(self):
+      if not self.is_empty():
+        for p in self._subtree_inorder(self.root()):
+          yield p
+    def _subtree_inorder(self, p):
+      if self.left(p) is not None: # 左
+        for other in self._subtree_inorder(self.left(p)):
+          yield other
+      yield p # 中
+      if self.right(p) is not None: # 右
+        for other in self._subtree_inorder(self.right(p)):
+          yield other
     
       
